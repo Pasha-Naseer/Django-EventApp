@@ -7,8 +7,8 @@ from django.core.validators import MinLengthValidator
 
 
 class UserLoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(label='password', widget=forms.PasswordInput)
+    username = forms.CharField(label="نام کاربری")
+    password = forms.CharField(label='رمز عبور', widget=forms.PasswordInput)
 
 
 class ChangePasswordForm(SetPasswordForm):
@@ -31,8 +31,8 @@ class ChangePasswordForm(SetPasswordForm):
 
 
 class UserCreationForm(forms.ModelForm):
-    password1 = forms.CharField(label='password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='confirm password', widget=forms.PasswordInput)
+    password1 = forms.CharField(label='رمز عبور', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='رمز عبور مجدد', widget=forms.PasswordInput)
 
     class Meta:
         model = User
@@ -91,11 +91,11 @@ class UserChangeFormUser(forms.ModelForm):
 
 
 class UserRegistrationForm(forms.Form):
-    my_username = forms.CharField(max_length=225, label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'نام کاربری'}), required=True)
-    phone_number = forms.CharField(max_length=11, label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'شماره تماس'}), required=True)
-    my_email = forms.EmailField(widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'ایمیل'}), required=True)
-    first_name = forms.CharField(max_length=225)
-    last_name = forms.CharField(max_length=225)
+    my_username = forms.CharField(max_length=225, label="نام کاربری", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'username'}), required=True)
+    phone_number = forms.CharField(max_length=11, label="شماره همراه", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'phone'}), required=True)
+    my_email = forms.EmailField(label="",widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'email'}), required=True)
+    first_name = forms.CharField(label="",max_length=225)
+    last_name = forms.CharField(label="", max_length=225)
 
     password = forms.CharField(widget=forms.PasswordInput, validators=[MinLengthValidator(8)])
 
@@ -104,24 +104,24 @@ class UserRegistrationForm(forms.Form):
         super(UserRegistrationForm, self).__init__(*args, **kwargs)
 
         self.fields['my_email'].widget.attrs['class'] = 'form-control'
-        self.fields['my_email'].widget.attrs['placeholder'] = 'ایمیل'
-        self.fields['my_email'].label = ''
+        self.fields['my_email'].widget.attrs['placeholder'] = 'email'
+        self.fields['my_email'].label = 'ایمیل'
         self.fields['my_email'].help_text = '<span class="form-text text-muted"><small></small></span>'
 
         self.fields['first_name'].widget.attrs['class'] = 'form-control'
-        self.fields['first_name'].widget.attrs['placeholder'] = 'نام'
-        self.fields['first_name'].label = ''
+        self.fields['first_name'].widget.attrs['placeholder'] = 'name'
+        self.fields['first_name'].label = 'نام'
         self.fields['first_name'].help_text = '<span class="form-text text-muted"><small></small></span>'
 
         self.fields['last_name'].widget.attrs['class'] = 'form-control'
-        self.fields['last_name'].widget.attrs['placeholder'] = 'نام خانوادگی'
-        self.fields['last_name'].label = ''
+        self.fields['last_name'].widget.attrs['placeholder'] = 'last name'
+        self.fields['last_name'].label = 'نام خانوادگی'
         self.fields['last_name'].help_text = '<span class="form-text text-muted"><small></small></span>'
 
         self.fields['password'].widget.attrs['class'] = 'form-control'
-        self.fields['password'].widget.attrs['placeholder'] = 'رمز'
+        self.fields['password'].widget.attrs['placeholder'] = 'password'
 
-        self.fields['password'].label = ''
+        self.fields['password'].label = 'رمز عبور'
         self.fields['password'].help_text = '<ul class="form-text text-muted small"><li>رمزتان نباید با سایر اطلاعات شما مشابه باشد</li><li>رمزتان باید حداقل دارای 8 کاراکتر باشد</li><li>رمزتان نباید رمز رایجی باشد</li><li>رمزتان نباید تماما عددی باشد</li></ul>'
 
     def clean_email(self):
@@ -153,7 +153,7 @@ class VerifyCodeForm(forms.Form):
 class ProfileExploreForm(forms.Form):
     query = forms.CharField(
         widget=forms.TextInput(attrs={
-            'placeholder': 'Search people, events, categories...',
+            'placeholder': 'جست‌و‌جوی هوشمند...',
             'class': 'search-input'
         })
     )
@@ -165,15 +165,21 @@ from .models import Profile
 
 class ProfileUpdateForm(forms.ModelForm):
     # Extra field for username from User model
-    username = forms.CharField(
+    username = forms.CharField(label="نام کاربری",
         max_length=150,
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Username'})
+        widget=forms.TextInput(attrs={'placeholder': 'نام کاربری'})
     )
 
     class Meta:
         model = Profile
         fields = ("profile_pic", "first_name", "last_name", "bio")
+        labels = {
+            'profile_pic': 'تصویر پروفایل',
+            'first_name': 'نام',
+            'last_name': 'نام خانوادگی',
+            'bio': 'بیوگرافی',
+        }
         widgets = {
             'profile_pic': forms.ClearableFileInput(attrs={'class': 'custom-file-input'}),
             'first_name': forms.TextInput(attrs={'placeholder': 'First Name'}),

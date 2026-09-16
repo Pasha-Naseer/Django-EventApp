@@ -10,6 +10,7 @@ from datetime import datetime, date, time, timedelta
 from django.utils import timezone
 from utils import send_otp_code
 from django.db.models import Q
+from home.models import Notification
 
 
 class UserLoginView(View):
@@ -246,13 +247,24 @@ class UserProfileView(View):
                 friend=friend,
                 user=profile.user
             )
+            Notification.objects.create(
+                profile=profile,
+                notif_text=f"{request.user} شما را به دوستان خود اد کرد"
+                ,
+                date_submitted=datetime.now()
+            )
 
         elif action == "remove":
             FriendItem.objects.filter(
                 friend=friend,
                 user=profile.user
             ).delete()
-
+            Notification.objects.create(
+                profile=profile,
+                notif_text=f"{request.user} شما را از دوستان خود حذف کرد"
+                ,
+                date_submitted=datetime.now()
+            )
         return redirect("flowaccounts:profile", profile_id=profile_id)
 
     # def post(self, request, profile_id):
@@ -404,8 +416,11 @@ class MyProfileView(View):
             profile = get_object_or_404(Profile, user=request.user)
             form = self.form_class(instance=profile, user=request.user)
             my_events = Event.objects.filter(promoter=request.user).order_by("-event_date")
+            friend, created = Friend.objects.get_or_create(user=request.user)
+            my_friends = FriendItem.objects.filter(friend=friend)
             return render(request, "flowaccounts/my_profile.html", {
                 "my_events": my_events,
+                'my_friends': my_friends,
                 "profile": profile,
                 "form": form,
             })
@@ -417,13 +432,25 @@ class MyProfileView(View):
             profile = get_object_or_404(Profile, user=request.user)
             form = self.form_class(request.POST, request.FILES, instance=profile, user=request.user)
             if form.is_valid():
-                if User.objects.filter(username=form.cleaned_data['username']).exists():
+                # Check username uniqueness excluding current user
+                if User.objects.filter(username=form.cleaned_data['username']).exclude(pk=request.user.pk).exists():
                     messages.error(request, "نام کاربری از قبل وجود دارد")
                     return redirect('flowaccounts:my_profile')
+
                 form.save()
                 messages.success(request, "اطلاعات پروفایل شما با موفقیت بروزرسانی شد!")
                 return redirect('flowaccounts:my_profile')
+
             messages.error(request, "فرم را به درستی پر کنید!")
             return redirect('flowaccounts:my_profile')
+
         messages.error(request, self.message)
         return redirect('flowaccounts:login')
+
+
+class ContactView(View):
+    def post(self, request):
+        pass
+
+    def get(self, request):
+        return render(request, 'flowaccounts/contact-us.html', {})

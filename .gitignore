@@ -1,34 +1,29 @@
-*.pyc
-*.pyo
-*.pyd
-*.so
-
+# Virtual environments
 venv/
 env/
-ENV/
-
-*.sqlite3
-db.sqlite3
-
-*.log
-stderr.log
-*.pot
-*.mo
-*.coverage
-*.py[cod]
-*.swp
-*.swo
-*.DS_Store
-*egg-info
-*.eggs
-*.idea/
-*.vscode/
-
+.env
+# Python cache
 __pycache__/
-flow/__pycache__/
-home/__pycache__/
-flowaccounts/__pycache__/
+*.py[cod]
+
+
+# Django static files (collected)
 staticfiles/
+
+# Media/uploads
 media/
-migrations/
-ProjectNotes
+
+# Environment variables / secrets
+.env
+
+# Pycharm project files
+.idea/
+*.iml
+
+# MacOS files
+.DS_Store
+
+# Logs
+*.log
+
+static

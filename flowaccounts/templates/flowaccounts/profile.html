@@ -2,7 +2,7 @@
 {% block content %}
 
 <!-- ================= PROFILE HEADER ================= -->
-<section class="container my-5">
+<section class="container my-5" dir="rtl">
   <div class="profile-card">
 
     {% if user_story %}
@@ -34,9 +34,9 @@
 </section>
 
 <!-- ================= USER EVENTS ================= -->
-<section class="container my-5">
+<section class="container my-5" dir="rtl">
   <div class="section-header">
-    <h2>{{ profile.user.username }}'s Events</h2>
+    <h2>رویدادهای {{ profile.user.username }}</h2>
   </div>
 
   <div class="explore-grid">
@@ -47,7 +47,7 @@
         <h3>{{ event.name }}</h3>
       </a>
     {% empty %}
-      <p class="empty-text">No events yet.</p>
+      <p class="empty-text">هنوز رویدادی وجود ندارد.</p>
     {% endfor %}
   </div>
 </section>
@@ -70,6 +70,7 @@
 }
 
 /* ===== PROFILE CARD ===== */
+
 .profile-card {
   display: flex;
   gap: 2rem;
@@ -82,9 +83,12 @@
   );
   box-shadow: 0 22px 55px rgba(0,0,0,0.2);
   align-items: center;
+  direction: rtl;
+  text-align: right;
 }
 
-/* ===== PROFILE IMAGE NORMAL ===== */
+/* ===== PROFILE IMAGE ===== */
+
 .profile-card img {
   width: 140px;
   height: 140px;
@@ -93,6 +97,7 @@
 }
 
 /* ===== STORY ACTIVE RING ===== */
+
 .profile-story-wrapper {
   padding: 4px;
   border-radius: 50%;
@@ -117,6 +122,7 @@
 }
 
 /* ===== PROFILE INFO ===== */
+
 .profile-info h1 {
   font-size: 2rem;
   font-weight: 800;
@@ -135,6 +141,7 @@
 }
 
 /* ===== ACTION BUTTON ===== */
+
 .profile-action-form {
   margin-top: 1rem;
 }
@@ -160,16 +167,19 @@
 }
 
 /* ===== EVENTS ===== */
+
 .section-header h2 {
   font-weight: 900;
   margin-bottom: 2rem;
   color: var(--blue-dark);
+  text-align: right;
 }
 
 .explore-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 2rem;
+  direction: rtl;
 }
 
 .modern-event-card {
@@ -209,9 +219,10 @@
 .modern-event-card h3 {
   position: absolute;
   bottom: 20px;
-  left: 20px;
   right: 20px;
+  left: 20px;
   font-weight: 800;
+  text-align: right;
 }
 
 .modern-event-card:hover {
@@ -226,6 +237,7 @@
 }
 
 /* ===== STORY MODAL ===== */
+
 .story-modal {
   position: fixed;
   inset: 0;
@@ -251,7 +263,7 @@
 #storyModalUser {
   position: absolute;
   top: 14px;
-  left: 18px;
+  right: 18px;
   color: white;
   font-weight: 700;
 }
@@ -259,7 +271,7 @@
 .story-close {
   position: absolute;
   top: 8px;
-  right: 14px;
+  left: 14px;
   background: none;
   border: none;
   font-size: 2.2rem;
@@ -268,6 +280,7 @@
 }
 
 /* ===== MOBILE ===== */
+
 @media (max-width: 768px) {
   .profile-card {
     flex-direction: column;

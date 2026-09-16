@@ -1,0 +1,42 @@
+    closefriend --> friend
+    handle public/private events using Friend model
+    both event detail and category detail pages should be adjusted
+done!
+
+    story -> friends
+    story self destruction after 24 h
+done!
+
+    a separate page for my events
+done!
+
+    We need to list the participants in every event
+done!
+
+    events in explore
+done!
+
+    bring events to profile (handle private events display)
+done!
+
+handle privacy while exploring
+
+    reply comment
+done!
+
+the ability to change username from my_profile
+
+a message to tell the user we will check his comment and then submit
+
+username change for a username that already exists can't happen in my_profile
+
+maybe an ability to delete participants by the owner
+
+
+    orange around profile and stories in profile
+done!
+
+    explore -> profile pic while searching
+done!
+
+create event in navbar

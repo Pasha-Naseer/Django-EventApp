@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.contrib import messages
 import datetime
 from datetime import timedelta
+import jdatetime
 
 class HomeView(View):
     form_class = StoryForm
@@ -54,15 +55,20 @@ class HomeView(View):
 
         action = request.POST.get('action')
 
+
         if action == 'post_story':
-            # Handle uploading a new story
             if 'image' in request.FILES:
-                story = Story(profile=request.user.profile, image=request.FILES['image'])
-                story.save()
+                Story.objects.update_or_create(
+                    profile=request.user.profile,
+                    defaults={
+                        "image": request.FILES['image'],
+                        "date_posted": timezone.now()
+                    }
+                )
+
                 messages.success(request, "استوری پست شد")
             else:
                 messages.error(request, "لطفا یک تصویر انتخاب کنید")
-
         elif action == 'delete_story':
             # Handle deleting a story
             story_id = request.POST.get('story_id')
@@ -92,8 +98,7 @@ class CategoryDetailView(View):
                 except (ValueError, FriendItem.DoesNotExist):
                     if request.user != event.promoter:  # checking if the promoter himself is viewing
                         event_list.remove(event)
-                else:
-                    pass
+
 
         context = {
             'category': category,
@@ -104,11 +109,68 @@ class CategoryDetailView(View):
     def post(self, request):
         pass
 
+#
+# class EventCreateView(View):
+#     form_class = EventCreateForm
+#
+#     def get(self, request, category_id):
+#         if not request.user.is_authenticated:
+#             messages.error(request, "برای ایجاد رویداد باید حتما ثبت نام کنید")
+#             return redirect('flowaccounts:register')
+#         category = get_object_or_404(Category, pk=category_id)
+#         form = self.form_class
+#         context = {
+#             'category': category,
+#             'form': form,
+#         }
+#         return render(request, 'home/create_event.html', context)
+#
+#     def post(self, request, category_id):
+#         if not request.user.is_authenticated:
+#             messages.error(request, "برای ایجاد رویداد باید حتما ثبت نام کنید")
+#             return redirect('flowaccounts:register')
+#         category = get_object_or_404(Category, pk=category_id)
+#         form = self.form_class(request.POST)
+#         if form.is_valid():
+#             # image form does not submit
+#             # we need to check time and date before submitting
+#             cd = form.cleaned_data
+#             start_hour = int(cd["start_hour"].hour)
+#             end_hour = int(cd["end_hour"].hour)
+#             start_minute = int(cd["start_hour"].minute)
+#             end_minute = int(cd["end_hour"].minute)
+#             message = 'در زمانبندی خود دقت کنید'
+#             if start_hour == end_hour:
+#                 if start_minute + 10 >= end_minute:
+#                     messages.error(request, message)
+#                     return redirect('home:create_event', category_id=category_id)
+#             elif start_hour > end_hour:
+#                 messages.error(request, message)
+#                 return redirect('home:create_event', category_id=category_id)
+#             # must be checked
+#             if cd['event_date'] == datetime.datetime.now().date():
+#                 if cd['start_hour'] <= timezone.now().time():
+#                     messages.error(request, message)
+#                     return redirect('home:create_event', category_id=category_id)
+#                     # a bit concerned about this 00:00
+#                     # return get
+#
+#             event = Event(name= cd['name'], promoter=request.user, image=request.FILES['image'], description=cd['description'],
+#                           start_hour=cd['start_hour'], end_hour=cd['end_hour'], event_date=cd['event_date'],
+#                           privacy=cd['privacy'], category=category)
+#             event.save()
+#             return redirect('home:category_detail', category_id=category_id)
+#
+#         # return to get
+
 
 class EventCreateView(View):
     form_class = EventCreateForm
 
     def get(self, request, category_id):
+        if not request.user.is_authenticated:
+            messages.error(request, "برای ایجاد رویداد باید حتما ثبت نام کنید")
+            return redirect('flowaccounts:register')
         category = get_object_or_404(Category, pk=category_id)
         form = self.form_class
         context = {
@@ -118,39 +180,35 @@ class EventCreateView(View):
         return render(request, 'home/create_event.html', context)
 
     def post(self, request, category_id):
-        category = get_object_or_404(Category, pk=category_id)
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            # image form does not submit
-            # we need to check time and date before submitting
-            cd = form.cleaned_data
-            start_hour = int(cd["start_hour"].hour)
-            end_hour = int(cd["end_hour"].hour)
-            start_minute = int(cd["start_hour"].minute)
-            end_minute = int(cd["end_hour"].minute)
-            message = 'در زمانبندی خود دقت کنید'
-            if start_hour == end_hour:
-                if start_minute + 10 >= end_minute:
-                    messages.error(request, message)
-                    return redirect('home:create_event', category_id=category_id)
-            elif start_hour > end_hour:
-                messages.error(request, message)
-                return redirect('home:create_event', category_id=category_id)
-            # must be checked
-            if cd['event_date'] <= datetime.datetime.now().date():
-                if cd['start_hour'] <= timezone.now().time():
-                    messages.error(request, message)
-                    return redirect('home:create_event', category_id=category_id)
-                    # a bit concerned about this 00:00
-                    # return get
+        if not request.user.is_authenticated:
+            messages.error(request, "برای ایجاد رویداد باید حتما ثبت نام کنید")
+            return redirect('flowaccounts:register')
 
-            event = Event(name= cd['name'], promoter=request.user, image=request.FILES['image'], description=cd['description'],
-                          start_hour=cd['start_hour'], end_hour=cd['end_hour'], event_date=cd['event_date'],
-                          privacy=cd['privacy'], category=category)
-            event.save()
+        category = get_object_or_404(Category, pk=category_id)
+        form = self.form_class(request.POST, request.FILES)
+
+        if form.is_valid():
+            cd = form.cleaned_data
+
+            # event_date is already converted to Gregorian by clean_event_date
+            Event.objects.create(
+                category=category,
+                promoter=request.user,
+                name=cd['name'],
+                image=cd.get('image'),
+                description=cd['description'],
+                event_date=cd['event_date'],
+                start_hour=cd['start_hour'],
+                end_hour=cd['end_hour'],
+                privacy=cd['privacy']
+            )
+
+            messages.success(request, "رویداد با موفقیت ایجاد شد")
             return redirect('home:category_detail', category_id=category_id)
 
-        # return to get
+        else:
+            context = {'category': category, 'form': form}
+            return render(request, 'home/create_event.html', context)
 
 
 # show the list of subscribers too
@@ -162,7 +220,9 @@ class EventDetailView(View):
         category = get_object_or_404(Category, pk=category_id)
         event = get_object_or_404(Event, category=category, pk=event_id)
         friend, check = Friend.objects.get_or_create(user=event.promoter)
-        if event.privacy == "PR":
+
+
+        if event.promoter != request.user and event.privacy == "PR":
             try:
                 friend_item = FriendItem.objects.get(friend=friend, user=request.user)
                 # we need to check if we can del the var in the beginning
@@ -177,6 +237,8 @@ class EventDetailView(View):
             confirmed=True,
             parent__isnull=True
         ).select_related('profile__user').prefetch_related('replies')
+
+
         try:
             membership_status = Membership.objects.get(event=event, profile=request.user.profile, to_whom=event.promoter.profile)
         except (ValueError, Membership.DoesNotExist, Exception):  # check this from polls
@@ -217,12 +279,25 @@ class EventDetailView(View):
                     parent=parent,
                     confirmed=True
                 )
+                if parent_id:
 
-                Notification.objects.create(
-                    profile=event.promoter.profile,
-                    notif_text=f"{request.user.username} commented on {event.name}!",
-                    date_submitted=datetime.datetime.now()
-                )
+                    Notification.objects.create(
+                        profile=comment.parent.profile,
+                        notif_text=f"کامنت {request.user.username} بر روی رویداد {event.name}"
+                                   f"\nکامنت: {comment.text}"
+                                   f"\nدر پاسخ به: {parent.text}"
+                        ,
+                        date_submitted=datetime.datetime.now()
+                    )
+                else:
+                    Notification.objects.create(
+                        profile=event.promoter.profile,
+                        notif_text=f"کامنت {request.user.username} بر روی رویداد {event.name}"
+                                   f"\nکامنت: {comment.text}"
+
+                        ,
+                        date_submitted=datetime.datetime.now()
+                    )
 
                 messages.success(request, "کامنت شما ثبت شد")
                 return redirect('home:event_detail', category_id=category_id, event_id=event_id)
@@ -255,6 +330,12 @@ class EventRequestView(View):
                 except (ValueError, Membership.DoesNotExist):
                     membership_req = Membership(event=event, profile=profile, to_whom=event.promoter.profile)
                     membership_req.save()
+                    Notification.objects.create(
+                        profile=event.promoter.profile,
+                        notif_text=f"{request.user.username} requested to join {event.name}!",
+                        date_submitted=datetime.datetime.now()
+                    )
+
                     messages.success(request, "درخواست با موفقیت ثبت شد")
                     return redirect("home:event_detail", category_id=category_id, event_id=event_id)
                 else:
@@ -282,6 +363,12 @@ class EventRequestView(View):
                     return redirect("home:event_detail", category_id=category_id, event_id=event_id)
                 else:
                     membership.delete()
+                    Notification.objects.create(
+                        profile=event.promoter.profile,
+                        notif_text=f"{request.user.username} cancelled membership in {event.name}!",
+                        date_submitted=datetime.datetime.now()
+                    )
+
                     messages.success(request, "درخواست با موفقیت ثبت شد")
                     return redirect("home:event_detail", category_id=category_id, event_id=event_id)
             else:
@@ -305,6 +392,7 @@ class NotificationsView(View):
             membership_reqs = Membership.objects.filter(to_whom=request.user.profile, accepted=False)
             notifs = Notification.objects.filter(profile=request.user.profile).order_by('-date_submitted')
             # there must be an expiration time for the comments to be displayed
+
             context = {
                 'membership_reqs': membership_reqs,
                 'notifs': notifs,

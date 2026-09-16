@@ -1,32 +1,34 @@
 {% extends 'home/base.html' %}
 {% block content %}
 
-<section class="auth-wrapper">
+<section class="auth-wrapper" dir="rtl">
   <div class="auth-card">
-    <h1>Create your account</h1>
-    <p>Join Flovv and start exploring</p>
+    <h1>ساخت حساب کاربری</h1>
+    <p>به EventApp بپیوندید و شروع به کاوش کنید</p>
 
     <form method="post" action="{% url 'flowaccounts:register' %}" class="auth-form">
       {% csrf_token %}
       {{ form.as_p }}
 
       <button type="submit" class="auth-btn">
-        Register
+        ثبت‌نام
       </button>
     </form>
 
     <p class="auth-footer">
-      Already have an account?
-      <a href="{% url 'flowaccounts:login' %}">Login</a>
+      قبلاً حساب دارید؟
+      <a href="{% url 'flowaccounts:login' %}">ورود</a>
     </p>
   </div>
 </section>
+
 <style>
-    .auth-wrapper {
+.auth-wrapper {
   min-height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  direction: rtl;
   background: linear-gradient(
     135deg,
     rgba(19,97,151,0.08),
@@ -41,7 +43,7 @@
   border-radius: 30px;
   background: #fff;
   box-shadow: 0 30px 70px rgba(0,0,0,0.25);
-  text-align: center;
+  text-align: right;
 }
 
 .auth-form input {
@@ -49,6 +51,7 @@
   border-radius: 14px;
   border: 1px solid rgba(0,0,0,0.12);
   padding: 0.6rem 0.8rem;
+  text-align: right;
 }
 
 .auth-btn {
@@ -72,6 +75,7 @@
   margin-top: 1.2rem;
   font-size: 0.9rem;
   color: #666;
+  text-align: right;
 }
 
 .auth-footer a {
@@ -79,6 +83,6 @@
   font-weight: 700;
   text-decoration: none;
 }
-
 </style>
+
 {% endblock %}

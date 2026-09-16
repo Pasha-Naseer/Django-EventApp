@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser
 from .managers import UserManager
 from django.utils import timezone
 from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class User(AbstractBaseUser):
@@ -17,8 +18,6 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
-
-    # required fields? for superuser?
     REQUIRED_FIELDS = ['phone_number', 'email', 'first_name', 'last_name']
 
     def __str__(self):
@@ -40,20 +39,20 @@ class Profile(models.Model):
     profile_pic = models.ImageField(default='fallback.png')
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
-    bio = models.TextField()
+    bio = models.TextField(blank=True)
 
     def __str__(self):
         return f"{self.user}"
 
 
+@receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
-        user_profile = Profile(user=instance, first_name=instance.first_name, last_name=instance.last_name)
-        user_profile.save()
-
-
-post_save.connect(create_profile, sender=User)
-
+        Profile.objects.create(
+            user=instance,
+            first_name=instance.first_name,
+            last_name=instance.last_name
+        )
 
 class OtpCode(models.Model):
     phone_number = models.CharField(max_length=12)

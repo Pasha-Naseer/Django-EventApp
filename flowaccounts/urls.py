@@ -12,4 +12,5 @@ urlpatterns = [
     path('profile/<profile_id>/', views.UserProfileView.as_view(), name='profile'),
     path('explore/', views.ExploreView.as_view(), name='explore'),
     path("my_profile/", views.MyProfileView.as_view(), name='my_profile'),
+    path("contact-us/", views.ContactView.as_view(), name="contact-us",),
 ]

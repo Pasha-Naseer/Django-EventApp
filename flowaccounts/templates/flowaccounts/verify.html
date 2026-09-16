@@ -1,26 +1,30 @@
+```html
 {% extends 'home/base.html' %}
 {% block content %}
 
-<section class="auth-wrapper">
+<section class="auth-wrapper" dir="rtl">
   <div class="auth-card">
-    <h1>Verify Your Account</h1>
-    <p>Enter the code sent to your email or phone</p>
+    <h1>تأیید حساب کاربری</h1>
+    <p>کدی که به ایمیل یا شماره شما ارسال شده را وارد کنید</p>
 
     <form method="post" action="{% url 'flowaccounts:verify_code' %}" class="auth-form">
       {% csrf_token %}
       {{ form.as_p }}
 
-      <button type="submit" class="auth-btn">Verify</button>
+      <button type="submit" class="auth-btn">تأیید</button>
     </form>
   </div>
 </section>
+
 <style>
-    /* ===== AUTH LAYOUT ===== */
+/* ===== AUTH LAYOUT ===== */
+
 .auth-wrapper {
   min-height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  direction: rtl;
   background: linear-gradient(
     135deg,
     rgba(19,97,151,0.08),
@@ -35,7 +39,7 @@
   border-radius: 30px;
   background: #fff;
   box-shadow: 0 30px 70px rgba(0,0,0,0.25);
-  text-align: center;
+  text-align: right;
 }
 
 .auth-card h1 {
@@ -54,6 +58,7 @@
   border-radius: 14px;
   border: 1px solid rgba(0,0,0,0.12);
   padding: 0.6rem 0.8rem;
+  text-align: right;
 }
 
 .auth-btn {
@@ -70,6 +75,8 @@
   color: #fff;
   font-weight: 700;
   box-shadow: 0 10px 30px rgba(255,102,0,0.45);
-
+}
 </style>
+
 {% endblock %}
+```

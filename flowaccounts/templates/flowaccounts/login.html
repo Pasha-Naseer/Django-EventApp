@@ -1,23 +1,24 @@
 {% extends 'home/base.html' %}
 {% block content %}
 
-<section class="auth-wrapper">
+<section class="auth-wrapper" dir="rtl">
   <div class="auth-card">
-    <h1>Welcome back</h1>
-    <p>Login to continue to Flovv</p>
+    <h1>خوش آمدید</h1>
+    <p>برای ادامه به EventApp وارد شوید</p>
 
     <form method="post" action="{% url 'flowaccounts:login' %}" class="auth-form">
       {% csrf_token %}
       {{ form.as_p }}
 
       <button type="submit" class="auth-btn">
-        Login
+        ورود
       </button>
     </form>
   </div>
 </section>
+
 <style>
-    :root {
+:root {
   --orange-main: #FF6600;
   --orange-soft: #FF9751;
   --blue-dark: #22305C;
@@ -25,11 +26,13 @@
 }
 
 /* ===== AUTH LAYOUT ===== */
+
 .auth-wrapper {
   min-height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  direction: rtl;
   background: linear-gradient(
     135deg,
     rgba(19,97,151,0.08),
@@ -44,7 +47,7 @@
   border-radius: 30px;
   background: #fff;
   box-shadow: 0 30px 70px rgba(0,0,0,0.25);
-  text-align: center;
+  text-align: right;
 }
 
 .auth-card h1 {
@@ -59,14 +62,17 @@
 }
 
 /* ===== FORM ===== */
+
 .auth-form input {
   width: 100%;
   border-radius: 14px;
   border: 1px solid rgba(0,0,0,0.12);
   padding: 0.6rem 0.8rem;
+  text-align: right;
 }
 
 /* ===== BUTTON ===== */
+
 .auth-btn {
   margin-top: 1rem;
   width: 100%;
@@ -90,4 +96,5 @@
 }
 
 </style>
+
 {% endblock %}

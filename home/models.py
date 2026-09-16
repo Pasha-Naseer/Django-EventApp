@@ -1,9 +1,10 @@
 import datetime
-
 from django.db import models
 from flowaccounts.models import User, Profile
 from django.db.models.signals import post_save
-#null=True set for CATEGORY.USER
+import jdatetime
+
+# null=True set for CATEGORY.USER
 
 class Category(models.Model):
     name = models.CharField(max_length=200, unique=True)
@@ -34,10 +35,19 @@ class Event(models.Model):
         blank=True,
     )
     privacy = models.CharField(max_length=2, choices=privacy_choices, default="PU")
+
     # if in close friends can see else not
     def __str__(self):
         return self.name
-    
+
+    def get_jalali_date(self):
+        """Convert event_date to Jalali format"""
+        return jdatetime.date.fromgregorian(date=self.event_date).strftime('%Y/%m/%d')
+
+    def get_jalali_date_verbose(self):
+        """Convert event_date to verbose Jalali format with month name"""
+        jalali = jdatetime.date.fromgregorian(date=self.event_date)
+        return jalali.strftime('%B %d %Y')  # e.g., "30 اردیبهشت 1405"
     # Get all participants of an event
     # event.participants.all()
 
@@ -99,9 +109,11 @@ class Membership(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     # when pushing on server null is not True
-    to_whom = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="event_owner", null=True)  # can there be collision
+    to_whom = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="event_owner",
+                                null=True)  # can there be collision
     date_submitted = models.DateTimeField(auto_now_add=True)  # auto_now_add?
     accepted = models.BooleanField(default=False)
+
     # delete the rejected ones
 
     def __str__(self):

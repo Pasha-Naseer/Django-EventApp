@@ -1,0 +1,203 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="contact-page py-5">
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="text-center mb-5">
+
+            <h1 class="contact-title">
+                تماس با ما
+            </h1>
+
+            <p class="contact-subtitle">
+                EventApp یک پلتفرم مدیریت و کشف رویدادهاست که به شما کمک می‌کند
+                رویدادهای جذاب را پیدا کنید، ثبت‌نام کنید و تجربه‌ای بهتر از
+                دنیای ایونت‌ها داشته باشید.
+            </p>
+
+        </div>
+
+        <!-- Contact Card -->
+        <div class="contact-card mx-auto">
+
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <i class="bi bi-telephone-fill"></i>
+                </div>
+
+                <div>
+                    <div class="contact-label">
+                        شماره تماس
+                    </div>
+
+                    <div class="contact-value">
+                        09911327751
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-divider"></div>
+
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <i class="bi bi-geo-alt-fill"></i>
+                </div>
+
+                <div>
+                    <div class="contact-label">
+                        مکان
+                    </div>
+
+                    <div class="contact-value">
+                        تبریز
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<div style="display:flex;align-items:center;justfy-content:center;">
+<a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=728590&Code=xQUTSsPogRjAIaQoAFF5Bds2NHmo3gMp'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=728590&Code=xQUTSsPogRjAIaQoAFF5Bds2NHmo3gMp' alt='' style='cursor:pointer' code='xQUTSsPogRjAIaQoAFF5Bds2NHmo3gMp'></a>
+</div>
+
+<style>
+
+.contact-page {
+    min-height: 70vh;
+}
+
+/* ================= HEADER ================= */
+
+.contact-title {
+
+    color: var(--blue-dark);
+
+    font-weight: 800;
+    font-size: 2.2rem;
+
+    margin-bottom: 1rem;
+}
+
+.contact-subtitle {
+
+    max-width: 700px;
+
+    margin: 0 auto;
+
+    color: #5f6b8a;
+
+    line-height: 2;
+
+    font-size: 1rem;
+}
+
+/* ================= CARD ================= */
+
+.contact-card {
+
+    background: #fff;
+
+    border-radius: 22px;
+
+    padding: 2rem;
+
+    max-width: 650px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+
+    border: 1px solid rgba(0,0,0,0.04);
+}
+
+.contact-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 1rem;
+}
+
+.contact-icon {
+
+    width: 58px;
+    height: 58px;
+
+    border-radius: 18px;
+
+    background: linear-gradient(
+        135deg,
+        var(--orange-main),
+        var(--orange-soft)
+    );
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+
+    font-size: 1.2rem;
+
+    flex-shrink: 0;
+}
+
+.contact-label {
+
+    color: #8a93ab;
+
+    font-size: 0.9rem;
+
+    margin-bottom: 0.2rem;
+}
+
+.contact-value {
+
+    color: var(--blue-dark);
+
+    font-size: 1.1rem;
+
+    font-weight: 700;
+}
+
+.contact-divider {
+
+    height: 1px;
+
+    background: rgba(0,0,0,0.06);
+
+    margin: 1.5rem 0;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+
+    .contact-card {
+
+        padding: 1.5rem;
+    }
+
+    .contact-title {
+
+        font-size: 1.8rem;
+    }
+
+    .contact-subtitle {
+
+        font-size: 0.95rem;
+        line-height: 1.9;
+    }
+}
+
+</style>
+
+{% endblock %}

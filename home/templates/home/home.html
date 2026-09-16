@@ -4,71 +4,68 @@
 {% block content %}
 
 <!-- ================= STORIES ================= -->
-<section class="flovv-stories my-5">
+<section class="EventApp-stories my-3" dir="rtl">
   <div class="container">
 
-  <h1 class="section-title">Stories</h1>
+    <h1 class="section-title">استوری‌ها</h1>
 
+    <div class="story-row">
 
-<div class="story-row">
-<br/>
-  {# ================= YOUR STORY OR ADD STORY ================= #}
-  {% if user_story %}
-    <div class="story-card-wrapper">
+      {# ================= YOUR STORY OR ADD STORY ================= #}
+      {% if user_story %}
+      <div class="story-card-wrapper">
 
-      <!-- YOUR STORY -->
+        <!-- YOUR STORY -->
+        <div
+          class="story-card unseen your-story"
+          data-image="{{ user_story.image.url }}"
+          data-username="استوری شما"
+        >
+          <div class="story-ring">
+            <img src="{{ request.user.profile.profile_pic.url }}" alt="">
+          </div>
+          <span>استوری شما</span>
+        </div>
+
+        <!-- DELETE BUTTON -->
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete_story">
+          <input type="hidden" name="story_id" value="{{ user_story.id }}">
+          <button type="submit" class="delete-story-btn">✕</button>
+        </form>
+
+      </div>
+
+      {% else %}
+
+      <!-- ADD STORY -->
+      <div class="story-card add-story">
+        <div class="story-ring">
+          <div class="add-story-inner">
+            <span>+</span>
+          </div>
+        </div>
+        <span>افزودن استوری</span>
+      </div>
+
+      {% endif %}
+
+      {# ================= OTHER USERS' STORIES ================= #}
+      {% for story in stories %}
       <div
-        class="story-card unseen your-story"
-        data-image="{{ user_story.image.url }}"
-        data-username="Your story"
+        class="story-card unseen"
+        data-image="{{ story.image.url }}"
+        data-username="{{ story.profile.user.username }}"
       >
         <div class="story-ring">
-          <img src="{{ request.user.profile.profile_pic.url }}" alt="">
+          <img src="{{ story.profile.profile_pic.url }}" alt="">
         </div>
-        <span>Your story</span>
+        <span>{{ story.profile.user.username }}</span>
       </div>
-
-      <!-- DELETE BUTTON -->
-<form method="post">
-  {% csrf_token %}
-  <input type="hidden" name="action" value="delete_story">
-  <input type="hidden" name="story_id" value="{{ user_story.id }}">
-  <button type="submit" class="delete-story-btn">✕</button>
-</form>
-
+      {% endfor %}
 
     </div>
-
-  {% else %}
-
-    <!-- ADD STORY -->
-    <div class="story-card add-story">
-      <div class="story-ring">
-        <div class="add-story-inner">
-          <span>+</span>
-        </div>
-      </div>
-      <span>Your story</span>
-    </div>
-
-  {% endif %}
-
-  {# ================= OTHER USERS' STORIES ================= #}
-  {% for story in stories %}
-    <div
-      class="story-card unseen"
-      data-image="{{ story.image.url }}"
-      data-username="{{ story.profile.user.username }}"
-    >
-      <div class="story-ring">
-        <img src="{{ story.profile.profile_pic.url }}" alt="">
-      </div>
-      <span>{{ story.profile.user.username }}</span>
-    </div>
-  {% endfor %}
-
-</div>
-
 
   </div>
 </section>
@@ -81,42 +78,51 @@
     <button class="story-close">&times;</button>
   </div>
 </div>
+
 <!-- ================= ADD STORY MODAL ================= -->
 <div id="addStoryModal" class="story-modal">
   <div class="story-modal-content add-story-modal">
-    <h3>Add Story</h3>
+    <h3>افزودن استوری</h3>
 
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-   <input type="hidden" name="action" value="post_story">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="post_story">
 
-    {{ form }}
-    <button type="submit" class="add-story-btn">Post</button>
-  </form>
+      {{ form }}
 
+      <button type="submit" class="add-story-btn">ارسال</button>
+    </form>
 
     <button class="story-close add-story-close">&times;</button>
   </div>
 </div>
 
 <!-- ================= CATEGORIES ================= -->
-<section class="flovv-explorer container my-5">
-  <h1 class="section-title">Explore Categories</h1>
+<section class="EventApp-explorer container my-3">
+  <h1 class="section-title">دسته‌بندی‌ها</h1>
 
   <div class="row g-4">
     {% for category in categories %}
-      <div class="col-12 col-sm-6 col-md-4">
-        <a href="{% url 'home:category_detail' category.id %}" class="flovv-card">
-          <img src="{{ category.image.url }}" alt="{{ category.name }}">
-          <div class="flovv-gradient"></div>
-          <h2>{{ category.name }}</h2>
-        </a>
-      </div>
+    <div class="col-12 col-sm-6 col-md-4">
+      <a href="{% url 'home:category_detail' category.id %}" class="EventApp-card">
+        <img src="{{ category.image.url }}" alt="{{ category.name }}">
+        <div class="EventApp-gradient"></div>
+        <h2>{{ category.name }}</h2>
+      </a>
+    </div>
     {% endfor %}
   </div>
 </section>
 
 <style>
+
+html,
+body {
+  direction: rtl;
+  text-align: right;
+  font-family: Vazirmatn, sans-serif;
+}
+
 :root {
   --orange-main: #FF6600;
   --orange-soft: #FF9751;
@@ -125,19 +131,24 @@
 }
 
 /* ===== TITLES ===== */
-.section-title {
+
+.EventApp-stories .section-title,
+.EventApp-explorer .section-title {
+  display: block;
+  width: 100%;
+  text-align: right !important;
   font-size: 1.9rem;
   font-weight: 800;
   color: var(--blue-dark);
-  margin-bottom: 1.6rem;
+  margin: 0 0 1.6rem 0;
 }
-
-/* ===== STORIES ===== */
 .story-row {
   display: flex;
   gap: 1.2rem;
   overflow-x: auto;
-  padding-bottom: 0.5rem;
+  padding-bottom: 1.2rem;
+  padding-top: 0.5rem;
+  direction: rtl;
 }
 
 .story-card {
@@ -156,12 +167,10 @@
   margin-bottom: 0.3rem;
 }
 
-/* Unseen story – solid Flovv orange ring */
+/* Unseen story */
 .story-card.unseen .story-ring {
   background: var(--orange-main);
 }
-
-
 
 /* Seen */
 .story-card.seen .story-ring {
@@ -208,7 +217,7 @@
 #storyModalUser {
   position: absolute;
   top: 14px;
-  left: 18px;
+  right: 18px;
   color: white;
   font-weight: 700;
   letter-spacing: 0.4px;
@@ -217,7 +226,7 @@
 .story-close {
   position: absolute;
   top: 8px;
-  right: 14px;
+  left: 14px;
   background: none;
   border: none;
   font-size: 2.2rem;
@@ -226,7 +235,7 @@
 }
 
 /* ===== CATEGORY CARDS ===== */
-.flovv-card {
+.EventApp-card {
   position: relative;
   height: 320px;
   border-radius: 24px;
@@ -235,14 +244,14 @@
   transition: all 0.35s ease;
 }
 
-.flovv-card img {
+.EventApp-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.6s ease;
 }
 
-.flovv-gradient {
+.EventApp-gradient {
   position: absolute;
   inset: 0;
   background: linear-gradient(
@@ -253,10 +262,10 @@
   );
 }
 
-.flovv-card h2 {
+.EventApp-card h2 {
   position: absolute;
   bottom: 20px;
-  left: 20px;
+  right: 20px;
   color: white;
   font-weight: 800;
   font-size: 1.4rem;
@@ -264,15 +273,15 @@
 }
 
 /* Hover */
-.flovv-card:hover {
+.EventApp-card:hover {
   transform: translateY(-8px);
 }
 
-.flovv-card:hover img {
+.EventApp-card:hover img {
   transform: scale(1.1);
 }
 
-.flovv-card:hover .flovv-gradient {
+.EventApp-card:hover .EventApp-gradient {
   background: linear-gradient(
     to top,
     rgba(255,102,0,0.9),
@@ -280,20 +289,17 @@
     transparent
   );
 }
+
 /* ===== STORIES SECTION SURFACE ===== */
-.flovv-stories {
-  padding: 3.5rem 0 3rem;
+.EventApp-stories {
+  padding: 2rem 0 1rem;
   background: linear-gradient(
     to bottom,
     rgba(34,48,92,0.04),
     rgba(34,48,92,0.00)
   );
 }
-/* ===== CATEGORIES RHYTHM OFFSET ===== */
-.flovv-explorer {
-  margin-top: -1.5rem;
-  padding-top: 3rem;
-}
+
 /* ===== ADD STORY ===== */
 .story-card.add-story .story-ring {
   background: var(--orange-main);
@@ -322,7 +328,7 @@
   border-radius: 22px;
   max-width: 380px;
   width: 90%;
-  text-align: center;
+  text-align: right;
 }
 
 .add-story-modal h3 {
@@ -345,6 +351,7 @@
   color: white;
   font-weight: 700;
 }
+
 /* ===== STORY WRAPPER ===== */
 .story-card-wrapper {
   position: relative;
@@ -355,7 +362,7 @@
 .delete-story-btn {
   position: absolute;
   top: -6px;
-  right: -6px;
+  left: -6px;
   width: 26px;
   height: 26px;
   border-radius: 50%;
@@ -373,25 +380,24 @@
   backdrop-filter: blur(6px);
 }
 
-/* Show on hover */
 .story-card-wrapper:hover .delete-story-btn {
   opacity: 1;
   transform: scale(1.05);
 }
 
-/* Hover danger feedback */
 .delete-story-btn:hover {
   background: #ff3b3b;
   transform: scale(1.15);
 }
-.story-row {
-  display: flex;
-  gap: 1.2rem;
-  overflow-x: auto;
-  padding-bottom: 1.2rem; /* more bottom space */
-  padding-top: 0.5rem; /* extra top space for delete button */
+.EventApp-card {
+  position: relative;
+  display: flex;            /* add this */
+  height: 320px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 22px 50px rgba(0,0,0,0.22);
+  transition: all 0.35s ease;
 }
-
 </style>
 
 <script>
@@ -412,6 +418,7 @@ document.querySelectorAll(".story-card").forEach(card => {
 });
 
 closeBtn.onclick = () => modal.style.display = "none";
+
 modal.onclick = e => {
   if (e.target === modal) modal.style.display = "none";
 };
@@ -420,17 +427,19 @@ const addStoryBtn = document.querySelector(".story-card.add-story");
 const addStoryModal = document.getElementById("addStoryModal");
 const addStoryClose = document.querySelector(".add-story-close");
 
-addStoryBtn.addEventListener("click", () => {
-  addStoryModal.style.display = "flex";
-});
+if (addStoryBtn) {
+  addStoryBtn.addEventListener("click", () => {
+    addStoryModal.style.display = "flex";
+  });
+}
 
 addStoryClose.onclick = () => addStoryModal.style.display = "none";
 
 addStoryModal.onclick = e => {
-  if (e.target === addStoryModal) addStoryModal.style.display = "none";
+  if (e.target === addStoryModal) {
+    addStoryModal.style.display = "none";
+  }
 };
-
-
 </script>
 
 {% endblock %}

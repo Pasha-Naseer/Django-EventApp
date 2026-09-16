@@ -1,193 +1,286 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en">
+<html lang="fa" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- very important for mobile responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--    <link rel="shortcut icon" href="{% static 'img/EventApp-icon.png' %}">-->
+    <title>EventApp</title>
 
-    <title>FlowAPP</title>
+    <!-- Bootstrap -->
+    <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet">
 
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-    <!-- Your custom styles (optional – can also be in a separate file) -->
+    <!-- Persian Font -->
+<!--    <link rel="preconnect" href="https://fonts.googleapis.com">-->
+<!--    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800&display=swap" rel="stylesheet">-->
 
 </head>
+
 <body>
+
     {% include 'home/navbar.html' %}
+
+    <!-- Messages -->
     {% if messages %}
     <div class="container mt-3">
         {% for message in messages %}
-            <div class="flovv-message flovv-message-{{ message.tags }}">
+            <div class="EventApp-message EventApp-message-{{ message.tags }} alert alert-dismissible fade show" dir="rtl">
+
                 {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="بستن">
+                </button>
             </div>
         {% endfor %}
     </div>
     {% endif %}
 
-
+    <!-- Page Content -->
     {% block content %}
     {% endblock %}
-    <!-- ================= MODERN MINIMAL FOOTER ================= -->
-<footer class="flovv-footer py-4 mt-5">
-  <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
 
-    <!-- Logo / Branding -->
-    <div class="footer-brand mb-3 mb-md-0">
-      <a href="{% url 'home:home' %}" class="text-decoration-none d-flex align-items-center">
-        <span class="footer-logo me-2">FlowAPP</span>
-        <span class="footer-tagline">Explore. Share. Connect.</span>
-      </a>
-    </div>
+    <!-- ================= FOOTER ================= -->
+    <footer class="EventApp-footer py-4 mt-5">
 
-    <!-- Navigation Links -->
-    <ul class="footer-nav list-unstyled d-flex gap-3 mb-3 mb-md-0">
-      <li><a href="{% url 'home:home' %}">Home</a></li>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Contact</a></li>
-      <li><a href="#">Privacy</a></li>
-    </ul>
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
 
-    <!-- Social Icons -->
-    <div class="footer-social d-flex gap-3">
-      <a href="#" class="social-icon" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-      <a href="#" class="social-icon" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
-      <a href="#" class="social-icon" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-    </div>
+            <!-- Social Icons -->
+            <div class="footer-social d-flex gap-3">
+                <a href="#" class="social-icon" aria-label="Instagram">
+                    <i class="bi bi-instagram"></i>
+                </a>
 
-  </div>
+                <a href="#" class="social-icon" aria-label="Twitter">
+                    <i class="bi bi-twitter"></i>
+                </a>
 
-  <!-- Copyright -->
-  <div class="text-center mt-3" style="color: #aaa; font-size: 0.85rem;">
-    &copy; {{ now.year }} FlowAPP. All rights reserved.
-  </div>
-</footer>
+                <a href="#" class="social-icon" aria-label="Facebook">
+                    <i class="bi bi-facebook"></i>
+                </a>
+            </div>
 
-    <!-- Bootstrap JS (optional – only needed if you use dropdowns, modals, tooltips, etc.) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"></script>
+        </div>
+
+        <!-- Copyright -->
+        <div class="text-center mt-3 footer-copy">
+            © {{ now.year }} EventAppapp - تمامی حقوق محفوظ است
+        </div>
+
+        <div class="text-center mt-1 footer-powered">
+            توسعه داده شده توسط مهدی نصیرسلطانی | ۰۹۹۱۱۳۲۷۷۵۱
+        </div>
+
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
 <style>
-    /* ===== FLovv Messages Styling ===== */
-.flovv-message {
-  position: relative;
-  padding: 1rem 1.5rem;
-  margin-bottom: 1rem;
-  border-radius: 22px;
-  box-shadow: 0 12px 35px rgba(0,0,0,0.18);
-  color: #fff;
-  font-weight: 600;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  animation: slideIn 0.5s ease forwards;
+
+:root {
+    --orange-main: #FF6600;
+    --orange-soft: #FF9751;
+    --blue-dark: #22305C;
+    --blue-accent: #136197;
 }
 
-.flovv-message-success {
-  background: linear-gradient(135deg, #136197, #22305C);
+/* ================= GLOBAL ================= */
+
+html,
+body {
+    direction: rtl;
+    text-align: right;
+    font-family: 'Vazirmatn', sans-serif;
+    background: #f7f8fc;
 }
 
-.flovv-message-error {
-  background: linear-gradient(135deg, #FF6600, #FF9751);
+/* ================= MESSAGES ================= */
+
+.EventApp-message {
+    position: relative;
+    padding: 0.6rem 1rem;
+
+    margin-bottom: 1rem;
+    border-radius: 22px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.18);
+
+    color: #fff;
+    font-weight: 600;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    animation: slideIn 0.5s ease forwards;
 }
 
-.flovv-message-warning {
-  background: linear-gradient(135deg, #FF9751, #FF6600);
-  color: #22305C;
+.EventApp-message-success {
+    background: linear-gradient(135deg, #136197, #22305C);
 }
 
-.flovv-message-info {
-  background: linear-gradient(135deg, #22305C, #136197);
+.EventApp-message-error {
+    background: linear-gradient(135deg, #FF6600, #FF9751);
 }
 
-.flovv-message .btn-close {
-  background: rgba(255,255,255,0.2);
-  border-radius: 50%;
-  border: none;
-  width: 28px;
-  height: 28px;
-  color: #fff;
-  opacity: 0.9;
-  transition: all 0.3s ease;
+.EventApp-message-warning {
+    background: linear-gradient(135deg, #FF9751, #FF6600);
+    color: #22305C;
 }
 
-.flovv-message .btn-close:hover {
-  background: rgba(255,255,255,0.4);
-  opacity: 1;
+.EventApp-message-info {
+    background: linear-gradient(135deg, #22305C, #136197);
 }
 
-/* Slide in animation */
-@keyframes slideIn {
-  0% {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
+.EventApp-message .btn-close {
+
+    position: static !important;
+
+    margin-right: 1rem;
+    margin-left: 0;
+
+    background-color: rgba(255,255,255,0.2);
+
+    border: none;
+    border-radius: 50%;
+
+    width: 14px;
+    height: 14px;
+    padding: 0.2rem;
+    background-size: 8px;
+
+
+    opacity: 0.6;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.3s ease;
+
+    filter: invert(1);
+}
+
+
+.EventApp-message .btn-close:hover {
+    background: rgba(255,255,255,0.4);
     opacity: 1;
-  }
 }
 
-<!-- ===== FOOTER STYLES ===== -->
-<style>
-.flovv-footer {
-  background: #22305C;
-  color: #fff;
-  font-weight: 500;
-  border-top: 1px solid rgba(255,255,255,0.1);
+/* ================= ANIMATION ================= */
+
+@keyframes slideIn {
+
+    0% {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
-.flovv-footer a {
-  color: #FF9751;
-  text-decoration: none;
-  transition: color 0.3s ease;
+/* ================= FOOTER ================= */
+
+.EventApp-footer {
+
+    background: #22305C;
+    color: #fff;
+
+    font-weight: 500;
+
+    border-top: 1px solid rgba(255,255,255,0.1);
+
+    direction: rtl;
+    text-align: center;
 }
 
-.flovv-footer a:hover {
-  color: #FF6600;
+.EventApp-footer a {
+
+    color: #FF9751;
+    text-decoration: none;
+
+    transition: color 0.3s ease;
+}
+
+.EventApp-footer a:hover {
+    color: #FF6600;
 }
 
 .footer-logo {
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: #FF6600;
+
+    font-size: 1.4rem;
+    font-weight: 800;
+
+    color: #FF6600;
 }
 
 .footer-tagline {
-  font-size: 0.9rem;
-  color: #fff;
-  opacity: 0.8;
-}
 
-.footer-nav li a {
-  font-size: 0.95rem;
+    font-size: 0.9rem;
+    color: #fff;
+
+    opacity: 0.8;
 }
 
 .footer-social a {
-  font-size: 1.2rem;
-  color: #FF9751;
-  transition: transform 0.25s ease, color 0.25s ease;
+
+    font-size: 1.2rem;
+    color: #FF9751;
+
+    transition:
+        transform 0.25s ease,
+        color 0.25s ease;
 }
 
 .footer-social a:hover {
-  color: #FF6600;
-  transform: translateY(-3px);
+
+    color: #FF6600;
+    transform: translateY(-3px);
 }
 
-/* Responsive adjustments */
-@media (max-width: 767px) {
-  .flovv-footer .container {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
+.footer-copy {
+
+    color: #aaa;
+    font-size: 0.85rem;
 }
+
+.footer-powered {
+
+    color: rgba(255,255,255,0.45);
+    font-size: 0.75rem;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 767px) {
+
+    .EventApp-footer .container {
+
+        flex-direction: column;
+        gap: 1rem;
+
+        text-align: center;
+    }
+}
+
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<script>
+setTimeout(() => {
+  document.querySelectorAll('.EventApp-message').forEach(msg => {
+    msg.style.opacity = '0';
+    setTimeout(() => msg.remove(), 500);
+  });
+}, 4000);
+</script>
+
 </body>
 </html>
